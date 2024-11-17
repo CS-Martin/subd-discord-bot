@@ -24,21 +24,22 @@ class SheetDBService {
         }
     }
 
-    async updateUserPoints(nickname, points) {
+    async update7pmWorldBossPoints(ign, points) {
 
         try {
-            const response = await fetch(`${this.SHEETDB_API_URL}/Name/${encodeURIComponent(nickname)}`, {
+            await fetch(`${this.SHEETDB_API_URL}/IGN/${encodeURIComponent(ign)}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ Points: points }),
+                body: JSON.stringify({ '7:00 PM': points }),
             });
         } catch (error) {
             console.error('Error updating user points in sheetdb:', error);
 
             throw error;
         }
+
     }
 }
 
