@@ -23,6 +23,12 @@ export default class GoogleSpreadsheetService {
                 range,
             });
 
+            if (!response.data.values) {
+                console.log('No data found in the specified range.');
+                return [];
+            }
+
+            console.log('Data fetched from sheet:', response.data.values);
             return response.data.values;
         } catch (error) {
             console.error('Error fetching data from sheet:', error);
