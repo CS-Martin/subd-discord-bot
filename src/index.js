@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+import express from 'express';
 import { Client, IntentsBitField, Collection } from 'discord.js';
 import { attendance_7pm_command } from './commands/7pm-worldboss.js';
 import { attendance_9pm_command } from './commands/9pm-worldboss.js';
@@ -9,6 +10,9 @@ import { attendance_archboss_command } from './commands/archboss.js';
 import { attendance_tax_command } from './commands/tax.js';
 import { attendance_siege_command } from './commands/siege.js';
 import { attendance_boonstone_riftstone_command } from './commands/boonstone.riftstone.js';
+
+const app = express();
+const port = process.env.PORT || 3000;
 
 const client = new Client({
     intents: [
@@ -54,6 +58,14 @@ client.on('interactionCreate', async (interaction) => {
     if (!command) return;
 
     await command.execute(interaction);
+});
+
+app.get('/', (req, res) => {
+    res.send('Discord bot is running!'); // Simple response for the root endpoint
+});
+
+app.listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
 });
 
 client.login(process.env.DISCORD_TOKEN);
