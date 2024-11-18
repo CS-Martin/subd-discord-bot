@@ -3,10 +3,10 @@ import GoogleSpreadsheetService from '../services/google.spreadsheet.service.js'
 
 const googleSheetService = new GoogleSpreadsheetService();
 
-export const attendance_7pm_command = {
+export const attendance_12am_command = {
     data: (() => {
         const builder = new SlashCommandBuilder()
-            .setName('7pm-worldboss-attendance')
+            .setName('12am-worldboss-attendance')
             .setDescription('Use this command to record your attendance for attending World Bosses.');
 
         for (let i = 1; i <= 6; i++) {
@@ -14,7 +14,7 @@ export const attendance_7pm_command = {
                 option
                     .setName(`user${i}`)
                     .setDescription(`User ${i} to increment points for`)
-                    .setRequired(i === 1)
+                    .setRequired(i === 1) // Only the first user is required
             );
         }
 
@@ -28,11 +28,11 @@ export const attendance_7pm_command = {
     })(),
 
     async execute(interaction) {
-        console.log('Starting 7PM World Boss Attendance Command...');
+        console.log('Starting 12AM World Boss Attendance Command...');
         await interaction.deferReply();
 
         try {
-            const excel_data = await googleSheetService.readSheet(process.env.SPREADSHEET_ID, 'Daily Tally!A1:B100');
+            const excel_data = await googleSheetService.readSheet(process.env.SPREADSHEET_ID, 'Daily Tally!A1:D100');
             console.log('Spreadsheet data:', excel_data);
 
             const users = new Set();
@@ -64,20 +64,20 @@ export const attendance_7pm_command = {
                     return;
                 }
 
-                const current_points = parseInt(excel_data[foundUserIndex][1], 10) || 0;
-                excel_data[foundUserIndex][1] = current_points + 3;
+                const current_points = parseInt(excel_data[foundUserIndex][3], 10) || 0;
+                excel_data[foundUserIndex][3] = current_points + 1;
             }
 
             console.log('Updated Spreadsheet Data:', excel_data);
 
             await googleSheetService.updateSheet(
                 process.env.SPREADSHEET_ID,
-                `Daily Tally!A1:B${excel_data.length}`,
+                `Daily Tally!A1:D${excel_data.length}`,
                 excel_data
             );
 
             const embed = new EmbedBuilder()
-                .setTitle('Successfully Recorded 7:00 PM Attendance!')
+                .setTitle('Successfully Recorded 12:00 AM Attendance!')
                 .setDescription(`Recorded users:\n ${Array.from({ length: 6 }, (_, i) => {
                     const user = interaction.options.getMember(`user${i + 1}`);
                     return user ? `${user.displayName}\n` : '';
@@ -90,7 +90,7 @@ export const attendance_7pm_command = {
 
             await interaction.followUp({ embeds: [embed] });
         } catch (error) {
-            console.error('Error in 7PM World Boss Attendance Command:', error);
+            console.error('Error in 12:00 AM World Boss Attendance Command:', error);
             await interaction.followUp(`❌ An error occurred while recording attendance: ${error.message}`);
         }
     },
