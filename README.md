@@ -1,4 +1,4 @@
-# **Flurry the Bot**
+# **Flurry the Bot** 🤖
 
 ### Description
 
