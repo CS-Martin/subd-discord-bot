@@ -1,4 +1,4 @@
-# **Automated Attendance Tallying Discord Bot**
+# **Flurry the Bot**
 
 ### Description
 
